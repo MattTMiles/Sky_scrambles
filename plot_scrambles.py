@@ -33,11 +33,11 @@ def cumulative(lists):
 num_of_tries = count_zeros(n_tries)
 #efficiency = np.reciprocal([float(i) for i in num_of_tries])
 #cum_eff = cumulative(efficiency)
-cum_num_of_tries = cumulative(num_of_tries)
+#cum_num_of_tries = cumulative(num_of_tries)
 cum_accepted = np.arange(len(num_of_tries))
 
 
-plt.scatter(cum_accepted, cum_num_of_tries)
+plt.scatter(cum_accepted, num_of_tries)
 #plt.xscale('log') 
 #plt.yscale('log')
 plt.ylabel('number of tries before acceptance')
@@ -45,6 +45,6 @@ plt.xlabel('number of accepted scrambles');
 
 
 
-plt.savefig('scrambles_val_100.png', bbox_inches='tight' )
+plt.savefig('scrambles_val_100_2.png', bbox_inches='tight' )
 
 

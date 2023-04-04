@@ -129,7 +129,7 @@ def get_scrambles(orf_true, Omega, f, Pij,  N=10, thresh=0.1):
             print("rejected")
     return(matchs, n_accep, n_iter, rejections)
 
-m, n_a, n_i, c = get_scrambles(orf_true[1], Omega, f, Pij, 50, 0.1)
+m, n_a, n_i, c = get_scrambles(orf_true[1], Omega, f, Pij, 15, 0.1)
 
 print(c)
 
