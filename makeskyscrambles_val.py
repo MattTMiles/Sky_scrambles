@@ -99,33 +99,38 @@ def get_scrambles(orf_true, Omega, f, Pij,  N=10, thresh=0.1):
     npsr = compute_npsrs(len(orf_true))
     orfs = []
     orfs.append(orf_true)
-    matchs = []
     n_accep = 1
     n_iter = 1
+    rejections = []
     while n_accep < N:
+        matchs = []
         n_iter += 1
-        #print("this is iteration = {}".format(n_iter))
-        #print("accepted skies = {}".format(n_accep))   
+        print("this is iteration = {}".format(n_iter))
+        print("accepted skies = {}".format(n_accep))   
         ptheta = np.arccos(np.random.uniform(-1, 1, npsr))
         pphi = np.random.uniform(0, 2*np.pi, npsr)
         new_orf = compute_orf(ptheta, pphi)
         for ii in range(n_accep):
             match = compute_match(new_orf, orfs[ii], Omega, f, Pij)
             matchs = np.append(matchs, abs(match))
-            #print(match)
+            print(match)
         matchs = np.array(matchs)
         reject = any(matchs > thresh)
         #pdb.set_trace()
+        ct_rej = 1
+        if reject == True:
+            ct_rej = 0
+        rejections.append(ct_rej)
         if reject == False:
             orfs.append(new_orf)
             n_accep += 1
-            #print("accepted")
-        #else:
-            #print("rejected")
-        matchs = []
+            print("accepted")
+        else:
+            print("rejected")
+    return(matchs, n_accep, n_iter, rejections)
 
-    return(matchs, n_accep, n_iter)
+m, n_a, n_i, c = get_scrambles(orf_true[1], Omega, f, Pij, 50, 0.1)
 
-m, n_a, n_i = get_scrambles(orf_true[1], Omega, f, Pij, 1000, 0.1)
+print(c)
 
-pd.DataFrame(scrambles[0]).to_csv('/fred/oz002/vdimarco/sky_scrambles/matches.csv', header=None, index=None) 
+pd.DataFrame(c).to_csv('/fred/oz002/vdimarco/sky_scrambles/skies/n_tries_50.csv', header=None, index=None) 
