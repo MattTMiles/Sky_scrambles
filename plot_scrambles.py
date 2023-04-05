@@ -1,15 +1,32 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import csv 
+import csv
+from matplotlib import rc
+import os
+os.environ["PATH"] += os.pathsep + '/Library/TeX/texbin/'
+rc('text', usetex=True)
+rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
+plt.style.use('plot_style.txt')
 
-with open('n_tries_100.csv', 'r') as file:
+
+def SciNotation(num,sig):
+    x='%.0e'  %num  #<-- Instead of 2, input sig here
+    x= x.split('e')
+    if num == 0:
+        return r"$0$"
+    if (x[1])[0] == "-":
+        return r"${}\times 10^{{{}}}$".format(x[0],x[1].lstrip('0'))# + "}}$"
+    else:
+        return r"${}\times 10^{{{}}}$".format(x[0],x[1][1:].lstrip('0'))#"$" + x[0]+" \times 10^{{"+ (x[1])[1:].lstrip('0') + "}}$"
+
+with open('/fred/oz002/vdimarco/sky_scrambles/skies/results/n_tries_many_mod.csv', 'r') as file:
     csvreader = csv.reader(file)
     n_t = []    
     for row in csvreader:
         n_t.append(row)
 
 n_tries = [int(item[0]) for item in n_t]
-print(n_tries)
+#print(n_tries)
 
 
 def count_zeros(arr):
@@ -33,18 +50,29 @@ def cumulative(lists):
 num_of_tries = count_zeros(n_tries)
 #efficiency = np.reciprocal([float(i) for i in num_of_tries])
 #cum_eff = cumulative(efficiency)
-#cum_num_of_tries = cumulative(num_of_tries)
+cum_num_of_tries = cumulative(num_of_tries)
 cum_accepted = np.arange(len(num_of_tries))
 
 
-plt.scatter(cum_accepted, num_of_tries)
+plt.plot(cum_num_of_tries, cum_accepted)
+plt.xlim(-1000, None)
+plt.minorticks_on()
+
+plt.grid(linestyle = ':', color = 'k', alpha = 0.3)
 #plt.xscale('log') 
 #plt.yscale('log')
-plt.ylabel('number of tries before acceptance')
-plt.xlabel('number of accepted scrambles');
+plt.xlabel('$N_{{\mathrm{{trial}}}}$', fontsize=14)
+plt.ylabel('$N_{{\mathrm{{accept}}}}$', fontsize=14)
+#labs = plt.xticklabels()
+locs, labs = plt.xticks()
 
+plt.xticks(locs, [SciNotation(l, 2) for l in locs])
+plt.xlim(-1000, None)
+#plt.xlabel('cumulative number of tries before acceptance')
+#plt.ylabel('cumulative number of accepted scrambles');
 
+plt.ylim(0,None)
 
-plt.savefig('scrambles_val_100_2.png', bbox_inches='tight' )
+plt.savefig('scrambles_val_many_mod.pdf', bbox_inches='tight' )
 
 
